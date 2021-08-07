@@ -1,6 +1,5 @@
 import Head from 'next/head';
-
-import { fetchEntries } from './util/contentfulPosts';
+import { fetchEntries } from '@';
 
 import Header from '@components/Header';
 import Footer from '@components/Footer';
