@@ -1,84 +1,74 @@
-import Head from 'next/head';
+function Post({ date, image, title }) {
+  let postImage = image;
+  let description = image.fields.description;
+  let url = image.fields.file.url;
+  console.log(description);
 
-import { fetchEntries } from './utils/contentfulPosts';
-
-import Header from '@components/Header';
-import Footer from '@components/Footer';
-import Post from '@components/Post';
-
-export default function Home({ posts }) {
   return (
-    <div className='container'>
-      <Head>
-        <title>Next + Contentful Starter</title>
-        <link rel='icon' href='/favicon.ico' />
-      </Head>
-
-      <main>
-        <Header />
-        <div className='posts'>
-          {posts.map((p) => {
-            return (
-              <Post
-                key={p.date}
-                date={p.date}
-                image={p.image.fields}
-                title={p.title}
-              />
-            );
-          })}
-        </div>
-      </main>
-
-      <Footer />
+    <div className='post'>
+      <img alt={description} src={`https:${url}`} />
+      <div className='description'>{description}</div>
+      <div className='text'>
+        <h2>{title}</h2>
+        <h3>{date.substring(0, 10)}</h3>
+      </div>
 
       <style jsx>{`
-        .container {
-          height: 100vh;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
+        .post {
+          position: relative;
+          margin: 10px;
+          width: 300px;
+          color: white;
+          cursor: pointer;
         }
-        main {
-          padding: 5rem 0;
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-        }
-        .posts {
-          display: flex;
-        }
-      `}</style>
-
-      <style jsx global>{`
-        html,
-        body {
-          padding: 0;
-          margin: 0;
-          font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-            Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
-            sans-serif;
-        }
-        * {
+        .description {
+          position: absolute;
+          top: 0;
+          padding: 10px;
           box-sizing: border-box;
+          background: linear-gradient(
+            0deg,
+            rgba(0, 0, 0, 0) 20%,
+            rgba(0, 0, 0, 1) 100%
+          );
+          height: 100px;
+          opacity: 0;
+          transition: opacity 0.5s;
+        }
+        .post:hover .description {
+          opacity: 1;
+        }
+        .text {
+          position: absolute;
+          bottom: 3px;
+          padding: 10px;
+          box-sizing: border-box;
+          width: 100%;
+          height: 70px;
+          background: linear-gradient(
+            0deg,
+            rgba(0, 0, 0, 0.5) 20%,
+            rgba(0, 0, 0, 0) 100%
+          );
+        }
+        h2,
+        h3 {
+          margin: 5px;
+        }
+        h2 {
+          margin-bottom: 0;
+        }
+        h3 {
+          margin-top: 0;
+          font-size: 0.8em;
+          font-weight: 400;
+        }
+        img {
+          max-width: 300px;
         }
       `}</style>
     </div>
   );
 }
 
-export async function getStaticProps() {
-  const res = await fetchEntries();
-  const posts = await res.map((p) => {
-    return p.fields;
-  });
-
-  return {
-    props: {
-      posts,
-    },
-  };
-}
+export default Post;
